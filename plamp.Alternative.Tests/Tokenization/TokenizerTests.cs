@@ -330,6 +330,23 @@ public class TokenizerTests
     }
 
     [Fact]
+    public async Task TooLongCharLiteral_ReturnsFullLiteralInStringRepresentationAndFilePos()
+    {
+        const string code = "'abc'";
+        using var stream = new MemoryStream(Encoding.Unicode.GetBytes(code));
+        using var reader = new StreamReader(stream, Encoding.Unicode);
+        var result = await Tokenizer.TokenizeAsync(reader, FileName);
+        
+        var literal = result.Sequence.Current().ShouldBeOfType<Literal>();
+        literal.ActualValue.ShouldBe('a');
+        result.Exceptions.ShouldHaveSingleItem().ShouldSatisfyAllConditions(
+            x => x.Code.ShouldBe(PlampExceptionInfo.InvalidCharLiteral().Code),
+            x => x.FilePosition.ShouldBe(new FilePosition(0, 5, FileName)));
+        literal.Position.ShouldBe(new FilePosition(0, 5, FileName));
+        literal.GetStringRepresentation().ShouldBe("'abc'");
+    }
+
+    [Fact]
     public async Task UnclosedEscapedChar_ReturnsCharAndError()
     {
         const string code = "'\\t";
