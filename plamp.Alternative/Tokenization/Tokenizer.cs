@@ -332,9 +332,8 @@ public static class Tokenizer
         context.Exceptions.Add(new PlampException(record, errPos));
         if (charContent != null)
         {
-            var len = escaped ? 3 : 2;
-            var litPos = new FilePosition(byteOffset, len, fileName);
-            literal = new Literal(text.Substring(start, len), litPos, charContent, Builtins.Char);
+            var litPos = new FilePosition(byteOffset, literalLen, fileName);
+            literal = new Literal(text.Substring(start, literalLen), litPos, charContent, Builtins.Char);
             return true;
         }
 
