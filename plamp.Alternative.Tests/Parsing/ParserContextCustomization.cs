@@ -1,10 +1,12 @@
 using System;
 using System.IO;
+using System.Linq;
 using System.Text;
 using AutoFixture;
 using AutoFixture.Kernel;
 using plamp.Alternative.Parsing;
 using plamp.Alternative.Tokenization;
+using plamp.Alternative.Tokenization.Token;
 
 namespace plamp.Alternative.Tests.Parsing;
 
@@ -18,7 +20,10 @@ public class ParserContextCustomization(string toParse) : ISpecimenBuilder
         using var reader = new StreamReader(stream, Encoding.Unicode);
         var tokenizationResult = Tokenizer.TokenizeAsync(reader, fileName).Result;
         var translationTable = new TranslationTable();
-        var result = new ParsingContext(tokenizationResult.Sequence, tokenizationResult.Exceptions, translationTable);
+        var parsingSequence = new TokenSequence(tokenizationResult.Sequence
+            .Where(x => x is not WhiteSpace)
+            .ToList());
+        var result = new ParsingContext(parsingSequence, tokenizationResult.Exceptions, translationTable);
         return result;
     }
 }
