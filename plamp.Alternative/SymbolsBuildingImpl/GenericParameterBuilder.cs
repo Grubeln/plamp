@@ -121,7 +121,9 @@ public class GenericParameterBuilder : IGenericParameterBuilder
     public bool Equals(ITypeInfo? other)
     {
         if (other is not GenericParameterBuilder otherBuilder) return false;
-        return Name == otherBuilder.Name;
+        return Name.Equals(otherBuilder.Name)
+               && DefinitionName.Equals(otherBuilder.DefinitionName)
+               && ModuleName.Equals(otherBuilder.ModuleName);
     }
 
     /// <inheritdoc/>
