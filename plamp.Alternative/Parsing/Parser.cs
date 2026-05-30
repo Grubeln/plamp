@@ -1000,7 +1000,11 @@ public static class Parser
         [NotNullWhen(true)] out InitArrayNode? arrayDefinition)
     {
         arrayDefinition = null;
-        if (context.Sequence.Current() is not OpenSquareBracket start) return false;
+
+        context.Sequence.SkipWhiteSpace();
+        if (context.Sequence.Current() is not OpenSquareBracket start)
+            return false;
+
         context.Sequence.MoveNextNonWhiteSpace();
 
         var lengthFork = context.Fork();
@@ -1022,11 +1026,19 @@ public static class Parser
         }
 
         context.Sequence.MoveNextNonWhiteSpace();
-        if (!TryParseType(context, out var type)) return false;
+
+        if (!TryParseType(context, out var type))
+            return false;
+
         arrayDefinition = new InitArrayNode(type, dimension);
+
         if (!context.TranslationTable.TryGetSymbol(type, out _))
             throw new InvalidOperationException("Parser code is incorrect");
-        context.TranslationTable.AddSymbol(arrayDefinition, context.Sequence.MakeRangeFromPrevNonWhitespace(start));
+
+        context.TranslationTable.AddSymbol(
+            arrayDefinition,
+            context.Sequence.MakeRangeFromPrevNonWhitespace(start));
+
         return true;
     }
 

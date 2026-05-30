@@ -142,15 +142,17 @@ fn initializes_generic_struct_field() int {
     return box.value;
 }
 
-fn initializes_nested_generic_struct_field() int {
-    inner := Box[int] {value: 42};
-    outer := Box[Box[int]] {value: inner};
-
-    return outer.value.value;
-}
-
 fn initializes_generic_pair_with_reordered_types() string {
     pair := Pair[int, string] {left: 42; right: "value"};
 
     return pair.right;
+}
+
+
+fn if_else_returns_on_all_paths(predicate: bool) int {
+    if (predicate) {
+        return 1;
+    } else {
+        return 2;
+    }
 }

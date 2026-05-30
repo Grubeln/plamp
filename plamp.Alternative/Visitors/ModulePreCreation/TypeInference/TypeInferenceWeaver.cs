@@ -893,14 +893,13 @@ public class TypeInferenceWeaver : BaseWeaver<PreCreationContext, TypeInferenceI
         return VisitResult.SkipChildren;
     }
 
-    protected override VisitResult PostVisitInitType(InitTypeNode node, TypeInferenceInnerContext context, NodeBase? parent)
+    protected override VisitResult PostVisitInitType(InitTypeNode node, TypeInferenceInnerContext context,
+                                                     NodeBase? parent)
     {
         var initializerTypes = new Dictionary<InitFieldNode, ITypeInfo?>();
         foreach (var initializer in node.FieldInitializers.Reverse())
         {
-            initializerTypes[initializer] = context.InnerExpressionTypeStack.Count == 0
-                ? null
-                : context.InnerExpressionTypeStack.Pop();
+            initializerTypes[initializer] = PopRequiredExpressionType(context);
         }
 
         if (Builtins.SymTable.ModuleName.Equals(node.Type.TypeInfo?.ModuleName))
@@ -936,6 +935,26 @@ public class TypeInferenceWeaver : BaseWeaver<PreCreationContext, TypeInferenceI
         
         context.InnerExpressionTypeStack.Push(node.Type.TypeInfo);
         return VisitResult.SkipChildren;
+    }
+
+    /// <summary>
+    /// Получить тип значения со стека
+    /// </summary>
+    /// <param name="context">Контекст инференса</param>
+    /// <returns></returns>
+    /// <exception cref="InvalidOperationException">Если на стеке не оказалось значений</exception>
+    private static ITypeInfo? PopRequiredExpressionType(
+        TypeInferenceInnerContext context)
+    {
+        if (context.InnerExpressionTypeStack.Count == 0)
+        {
+            // тут выкидывается именно InvalidOperationException т.к. эта ошибка не должна возникать из-за ввода пользователя,
+            // а когда инициализатор поля не положил значение в InnerExpressionTypeStack.
+            // Т.е. ошибка разработчика.
+            throw new InvalidOperationException("Expected type, but type stack is empty.");
+        }
+
+        return context.InnerExpressionTypeStack.Pop();
     }
 
     #endregion

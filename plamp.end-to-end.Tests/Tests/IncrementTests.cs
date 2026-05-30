@@ -15,12 +15,12 @@ public class IncrementTests
     /// </summary>
     public static TheoryData<string> IncrementOrDecrementAssignments => new()
     {
-        "postfix_increment_indexer_in_assignment",
-        "prefix_increment_indexer_in_assignment",
+        "postfix_increment_by_indexer_in_assignment",
+        "prefix_increment_by_indexer_in_assignment",
         "postfix_increment_field_in_assignment",
         "prefix_increment_field_in_assignment",
-        "postfix_decrement_indexer_in_assignment",
-        "prefix_decrement_indexer_in_assignment",
+        "postfix_decrement_by_indexer_in_assignment",
+        "prefix_decrement_by_indexer_in_assignment",
         "postfix_decrement_field_in_assignment",
         "prefix_decrement_field_in_assignment"
     };

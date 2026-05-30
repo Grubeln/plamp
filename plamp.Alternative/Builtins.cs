@@ -170,8 +170,8 @@ internal class BuiltinSymTable : ISymTable
     internal const string ArrayName  = "array";
 
     internal const string StrConcatName = "strConcat";
-    internal const string StrCharConcatName = "__strCharConcat";
-    internal const string CharStrConcatName = "__charStrConcat";
+    internal const string StrCharConcatName = "<strCharConcat>";
+    internal const string CharStrConcatName = "<charStrConcat>";
     
     private readonly FrozenDictionary<string, ITypeInfo> _types;
     private readonly FrozenDictionary<string, FuncInfo> _funcs;

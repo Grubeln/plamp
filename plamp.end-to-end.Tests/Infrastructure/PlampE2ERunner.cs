@@ -13,7 +13,11 @@ namespace plamp.EndToEnd.Tests.Infrastructure;
 /// </summary>
 public static class PlampE2ERunner
 {
-    private static readonly object EmitLock = new();
+    /// <summary>
+    /// Эмиттер модуля
+    /// </summary>
+    private static readonly IModuleEmitter ModuleEmitter =
+        new ConsoleCapturingModuleEmitter();
 
     /// <summary>
     /// Компилирует .plp файл и возвращает объект для вызова сгенерированных методов
@@ -60,35 +64,9 @@ public static class PlampE2ERunner
         var assembly = AssemblyBuilder.DefineDynamicAssembly(assemblyName, AssemblyBuilderAccess.RunAndCollect);
         var module = assembly.DefineDynamicModule(assemblyName.Name!);
 
-        var emittedIl = EmitModuleWithIlDump(symTable, module);
+        var emittedIl = ModuleEmitter.EmitModule(symTable, module);
 
         return new CompiledPlampProgram(filePath, module, emittedIl);
-    }
-
-    /// <summary>
-    /// Сборка IL дампа из консоли
-    /// </summary>
-    private static string EmitModuleWithIlDump(ISymTableBuilder symTable, ModuleBuilder module)
-    {
-        // SymTableEmitter сейчас пишет debug IL в консоль, поэтому в e2e перехватываем stdout и сохраняем дамп для диагностики ошибок при вызове методов
-        lock (EmitLock)
-        {
-            var originalOut = Console.Out;
-            using var ilWriter = new StringWriter();
-
-            try
-            {
-                Console.SetOut(ilWriter);
-                SymTableEmitter.EmitModule(symTable, module);
-                module.CreateGlobalFunctions();
-            }
-            finally
-            {
-                Console.SetOut(originalOut);
-            }
-
-            return ilWriter.ToString();
-        }
     }
 
     /// <summary>

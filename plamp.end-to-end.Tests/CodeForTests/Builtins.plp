@@ -89,3 +89,15 @@ fn return_int_as_any() any {
 fn return_string_as_any() any {
     return "value";
 }
+
+fn array_equals_empty_arrays() any {
+    first := [0]int;
+    second := [0]int;
+    return arrEquals(first, second);
+}
+
+fn strings_equals_empty_strings() any {
+    first := "";
+    second := "";
+    return strEquals(first, second);
+}

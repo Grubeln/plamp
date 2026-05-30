@@ -1,11 +1,12 @@
 namespace plamp.EndToEnd.Tests.Infrastructure;
 
 /// <summary>
-/// Исключение-обёртка, для e2e-инфраструктуры
+/// Исключение-обёртка для e2e-инфраструктуры.
+/// Добавляет к runtime-ошибке контекст .plp файла, вызываемой функции и IL дампа
 /// </summary>
 /// <param name="filePath">Полный путь к .plp файлу</param>
 /// <param name="methodName">Имя вызываемой функции</param>
-/// <param name="emittedIl">IL дапм, который был собран во время эмиссии</param>
+/// <param name="emittedIl">IL дамп, который был сгенерирован во время эмиссии</param>
 /// <param name="innerException">Исходное исключение, полученное при вызове функции</param>
 public sealed class E2ERuntimeInvocationException(
     string filePath,
@@ -30,7 +31,7 @@ public sealed class E2ERuntimeInvocationException(
     public string EmittedIl { get; } = emittedIl;
 
     /// <summary>
-    /// Сборать сообщение об ошибке
+    /// Собирает сообщение об ошибке
     /// </summary>
     private static string CreateMessage(
         string filePath,
@@ -39,10 +40,15 @@ public sealed class E2ERuntimeInvocationException(
         Exception innerException)
     {
         var rootException = innerException.GetBaseException();
+
         return $"""
                 Ошибка вызова функции {methodName} из файла {filePath}.
-                Исходное исключение: {innerException.GetType().FullName}: {innerException.Message}
-                Вложенное исключение: {rootException.GetType().FullName}: {rootException.Message}
+
+                Исключение:
+                {innerException}
+
+                Корневая причина:
+                {rootException.GetType().FullName}: {rootException.Message}
 
                 IL дамп:
                 {emittedIl}

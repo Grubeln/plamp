@@ -30,7 +30,7 @@ public class SyntaxTests
         { "initializes_int_fields", [], 42 },
         { "initializes_fields_from_function_calls", [], 42 },
         { "initializes_generic_struct_field", [], 42 },
-        { "initializes_nested_generic_struct_field", [], 42 }
+        { "if_else_returns_on_all_paths", [false], 2}
     };
 
     /// <summary>

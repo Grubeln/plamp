@@ -2,9 +2,9 @@ module e2e.arithmetic;
 
 data SmallNumbers {
     left, right: short;
-    marker: byte;
-    unsignedMarker: ushort;
-    signedMarker: sbyte
+    b: byte;
+    unsignedByte: ushort;
+    signedByte: sbyte
 }
 
 fn add(first, second: int) int {
@@ -83,9 +83,9 @@ fn increment_short_field(value: short) int {
 
 fn grouped_short_fields_and_assignment(first, second: short) int {
     numbers := SmallNumbers{};
-    numbers.left, numbers.right, numbers.marker := first, second, 1b;
+    numbers.left, numbers.right, numbers.b := first, second, 1b;
 
-    return numbers.left + numbers.right + numbers.marker;
+    return numbers.left + numbers.right + numbers.b;
 }
 
 fn add_uint_values(first, second: uint) uint {
@@ -98,18 +98,18 @@ fn add_ulong_values(first, second: ulong) ulong {
 
 fn increment_ushort_field(value: ushort) int {
     numbers := SmallNumbers{};
-    numbers.unsignedMarker := value;
-    numbers.unsignedMarker++;
+    numbers.unsignedByte := value;
+    numbers.unsignedByte++;
 
-    return numbers.unsignedMarker;
+    return numbers.unsignedByte;
 }
 
 fn decrement_sbyte_field(value: sbyte) int {
     numbers := SmallNumbers{};
-    numbers.signedMarker := value;
-    numbers.signedMarker--;
+    numbers.signedByte := value;
+    numbers.signedByte--;
 
-    return numbers.signedMarker;
+    return numbers.signedByte;
 }
 
 fn pass_int_literals_to_float_parameter() float {

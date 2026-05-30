@@ -73,7 +73,10 @@ public class SyntaxDiagnosticsTests
         { InvalidFile("InvalidDirectTypeSelfReference.plp"), PlampExceptionInfo.FieldProduceCircularDependency().Code },
         { InvalidFile("InvalidMutualTypeReference.plp"), PlampExceptionInfo.FieldProduceCircularDependency().Code },
         { InvalidFile("InvalidGenericTypeSelfReference.plp"), PlampExceptionInfo.FieldProduceCircularDependency().Code },
-        { InvalidFile("InvalidArrayTypeSelfReference.plp"), PlampExceptionInfo.FieldProduceCircularDependency().Code }
+        { InvalidFile("InvalidArrayTypeSelfReference.plp"), PlampExceptionInfo.FieldProduceCircularDependency().Code },
+        { InvalidFile("NoReturnAfterIf.plp"), PlampExceptionInfo.FuncMustReturnValue().Code },
+        { InvalidFile("NoReturnAfterWhile.plp"), PlampExceptionInfo.FuncMustReturnValue().Code },
+        { InvalidFile("ReturnInOnlyOneBranch.plp"), PlampExceptionInfo.FuncMustReturnValue().Code }
     };
 
     /// <summary>

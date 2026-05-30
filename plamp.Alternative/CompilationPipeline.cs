@@ -35,10 +35,8 @@ public static class CompilationPipeline
         var translationTable = new TranslationTable();
         // Парсер должен работать только со значимыми токенами.
         // Иначе редкие конструкции вроде комментариев между скобками generic типов начинают ломать синтаксический разбор
-        var parsingSequence = new TokenSequence(tokenizationResult.Sequence
-            .Where(x => x is not WhiteSpace)
-            .ToList());
-        var parsingContext = new ParsingContext(parsingSequence, tokenizationResult.Exceptions, translationTable);
+        tokenizationResult.Sequence.SkipWhiteSpace();
+        var parsingContext = new ParsingContext(tokenizationResult.Sequence, tokenizationResult.Exceptions, translationTable);
         var ast = Parser.ParseFile(parsingContext);
         return new ParsingResult(ast, parsingContext);
     }

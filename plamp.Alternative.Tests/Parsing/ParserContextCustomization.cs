@@ -20,10 +20,8 @@ public class ParserContextCustomization(string toParse) : ISpecimenBuilder
         using var reader = new StreamReader(stream, Encoding.Unicode);
         var tokenizationResult = Tokenizer.TokenizeAsync(reader, fileName).Result;
         var translationTable = new TranslationTable();
-        var parsingSequence = new TokenSequence(tokenizationResult.Sequence
-            .Where(x => x is not WhiteSpace)
-            .ToList());
-        var result = new ParsingContext(parsingSequence, tokenizationResult.Exceptions, translationTable);
+        tokenizationResult.Sequence.SkipWhiteSpace();
+        var result = new ParsingContext(tokenizationResult.Sequence, tokenizationResult.Exceptions, translationTable);
         return result;
     }
 }

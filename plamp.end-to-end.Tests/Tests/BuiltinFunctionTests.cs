@@ -34,7 +34,9 @@ public class BuiltinFunctionTests
         { "array_equals_different_lengths", false },
         { "array_equals_different_element_types", false },
         { "array_equals_same_string_values", true },
-        { "array_equals_nested_arrays", true }
+        { "array_equals_nested_arrays", true },
+        { "array_equals_empty_arrays", true },
+        { "strings_equals_empty_strings", true }
     };
 
     /// <summary>

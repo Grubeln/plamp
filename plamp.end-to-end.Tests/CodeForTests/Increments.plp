@@ -4,7 +4,7 @@ data Counter {
     value: int
 }
 
-fn postfix_increment_indexer_in_assignment() int {
+fn postfix_increment_by_indexer_in_assignment() int {
     values := [1]int;
     values[0] := 41;
     before := values[0]++;
@@ -12,7 +12,7 @@ fn postfix_increment_indexer_in_assignment() int {
     return before + values[0] - 41;
 }
 
-fn prefix_increment_indexer_in_assignment() int {
+fn prefix_increment_by_indexer_in_assignment() int {
     values := [1]int;
     values[0] := 41;
     after := ++values[0];
@@ -45,7 +45,7 @@ fn incremented_assignment_target_then_reassign() int {
     return values[0];
 }
 
-fn postfix_decrement_indexer_in_assignment() int {
+fn postfix_decrement_by_indexer_in_assignment() int {
     values := [1]int;
     values[0] := 43;
     before := values[0]--;
@@ -53,7 +53,7 @@ fn postfix_decrement_indexer_in_assignment() int {
     return before + values[0] - 43;
 }
 
-fn prefix_decrement_indexer_in_assignment() int {
+fn prefix_decrement_by_indexer_in_assignment() int {
     values := [1]int;
     values[0] := 43;
     after := --values[0];
