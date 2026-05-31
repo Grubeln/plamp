@@ -96,24 +96,6 @@ public class TokenSequence : IEnumerable<TokenBase>
         }
     }
 
-    /// <summary>
-    /// Пропустить пробелы.
-    /// В отличие от MoveNextNonWhiteSpace, не передвигает позицию если текущий токен не пробел
-    /// </summary>
-    /// <returns>true - если нашли значимый токен, иначе - false</returns>>
-    public bool SkipWhiteSpace()
-    {
-        while (Current() is WhiteSpace)
-        {
-            if (!MoveNext())
-            {
-                return false;
-            }
-        }
-
-        return true;
-    }
-
     public TokenBase Current() => _tokenList[_position];
 
     /// <summary>

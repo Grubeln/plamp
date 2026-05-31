@@ -26,7 +26,8 @@ public static class Parser
     {
         // В парсере есть конвенция: метод завершает работу на следующем значимом токене после разобранной конструкции.
         // Для корня файла нужно отдельно пропустить начальные пробелы и комментарии, потому что до них конструкции еще нет
-        context.Sequence.SkipWhiteSpace();
+        if(context.Sequence.Current().GetType() == typeof(WhiteSpace))
+            context.Sequence.MoveNextNonWhiteSpace();
         
         var topLevelList = new List<NodeBase>();
         while (context.Sequence.Current() is not EndOfFile)
