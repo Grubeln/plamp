@@ -142,7 +142,7 @@ fn initializes_generic_struct_field() int {
     return box.value;
 }
 
-fn initializes_generic_pair_with_reordered_types() string {
+fn initializes_generic_pair_and_returns_string_field() string {
     pair := Pair[int, string] {left: 42; right: "value"};
 
     return pair.right;

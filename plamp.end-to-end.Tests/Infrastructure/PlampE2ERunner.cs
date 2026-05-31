@@ -2,9 +2,9 @@ using System.Reflection;
 using System.Reflection.Emit;
 using System.Text;
 using plamp.Abstractions.Ast;
-using plamp.Abstractions.Symbols.SymTableBuilding;
 using plamp.Alternative;
 using plamp.ILCodeEmitters;
+using plamp.ILCodeEmitters.ModuleBuilding;
 
 namespace plamp.EndToEnd.Tests.Infrastructure;
 
@@ -13,12 +13,6 @@ namespace plamp.EndToEnd.Tests.Infrastructure;
 /// </summary>
 public static class PlampE2ERunner
 {
-    /// <summary>
-    /// Эмиттер модуля
-    /// </summary>
-    private static readonly IModuleEmitter ModuleEmitter =
-        new ConsoleCapturingModuleEmitter();
-
     /// <summary>
     /// Компилирует .plp файл и возвращает объект для вызова сгенерированных методов
     /// </summary>
@@ -63,10 +57,12 @@ public static class PlampE2ERunner
         var assemblyName = new AssemblyName(Guid.NewGuid().ToString("N"));
         var assembly = AssemblyBuilder.DefineDynamicAssembly(assemblyName, AssemblyBuilderAccess.RunAndCollect);
         var module = assembly.DefineDynamicModule(assemblyName.Name!);
+        var moduleBuilder = new IlDumpModuleBuilder(new ReflectionModuleBuilder(module));
 
-        var emittedIl = ModuleEmitter.EmitModule(symTable, module);
+        SymTableEmitter.EmitModule(symTable, moduleBuilder);
+        moduleBuilder.CreateGlobalFunctions();
 
-        return new CompiledPlampProgram(filePath, module, emittedIl);
+        return new CompiledPlampProgram(filePath, module, moduleBuilder.GetIlDump());
     }
 
     /// <summary>

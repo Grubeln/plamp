@@ -1,9 +1,9 @@
-module e2e.arithmetic;
+module e2e.math_operators;
 
 data SmallNumbers {
     left, right: short;
-    b: byte;
-    unsignedByte: ushort;
+    byteValue: byte;
+    unsignedShort: ushort;
     signedByte: sbyte
 }
 
@@ -81,11 +81,11 @@ fn increment_short_field(value: short) int {
     return numbers.left;
 }
 
-fn grouped_short_fields_and_assignment(first, second: short) int {
+fn grouped_small_number_fields_and_assignment(first, second: short) int {
     numbers := SmallNumbers{};
-    numbers.left, numbers.right, numbers.b := first, second, 1b;
+    numbers.left, numbers.right, numbers.byteValue := first, second, 1b;
 
-    return numbers.left + numbers.right + numbers.b;
+    return numbers.left + numbers.right + numbers.byteValue;
 }
 
 fn add_uint_values(first, second: uint) uint {
@@ -98,10 +98,10 @@ fn add_ulong_values(first, second: ulong) ulong {
 
 fn increment_ushort_field(value: ushort) int {
     numbers := SmallNumbers{};
-    numbers.unsignedByte := value;
-    numbers.unsignedByte++;
+    numbers.unsignedShort := value;
+    numbers.unsignedShort++;
 
-    return numbers.unsignedByte;
+    return numbers.unsignedShort;
 }
 
 fn decrement_sbyte_field(value: sbyte) int {

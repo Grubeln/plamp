@@ -11,20 +11,36 @@ public class LogicTests
     private const string SourceFile = "Logic.plp";
 
     /// <summary>
-    /// Проверяет выражение со скобками, где результат зависит от приоритета группировки вокруг && и ||
+    /// Все комбинации трёх bool аргументов для проверки логических выражений
+    /// </summary>
+    public static TheoryData<bool, bool, bool> BooleanTriples
+    {
+        get
+        {
+            var data = new TheoryData<bool, bool, bool>();
+            foreach (var first in new[] { false, true })
+            foreach (var second in new[] { false, true })
+            foreach (var third in new[] { false, true })
+            {
+                data.Add(first, second, third);
+            }
+
+            return data;
+        }
+    }
+
+    /// <summary>
+    /// Проверяет выражение со скобками, где результат зависит от группировки вокруг && и ||.
     /// </summary>
     [Theory]
-    [InlineData(false, false, false, false)]
-    [InlineData(false, false, true, true)]
-    [InlineData(true, false, true, false)]
-    [InlineData(true, true, false, true)]
+    [MemberData(nameof(BooleanTriples))]
     public async Task EvaluatesParenthesizedLogic(
         bool first,
         bool second,
-        bool third,
-        bool expected)
+        bool third)
     {
         var program = await PlampE2ERunner.CompileFromCodeForTestsAsync(SourceFile);
+        var expected = (first && second) || (!first && third);
 
         var result = program.Invoke<bool>("parenthesized_logic", first, second, third);
 
@@ -35,17 +51,14 @@ public class LogicTests
     /// Проверяет отрицание составного выражения с вложенными скобками
     /// </summary>
     [Theory]
-    [InlineData(false, false, false, true)]
-    [InlineData(true, false, false, true)]
-    [InlineData(true, true, false, false)]
-    [InlineData(true, false, true, false)]
+    [MemberData(nameof(BooleanTriples))]
     public async Task EvaluatesInvertedParenthesizedLogic(
         bool first,
         bool second,
-        bool third,
-        bool expected)
+        bool third)
     {
         var program = await PlampE2ERunner.CompileFromCodeForTestsAsync(SourceFile);
+        var expected = !(first && (second || third));
 
         var result = program.Invoke<bool>("inverted_parenthesized_logic", first, second, third);
 
@@ -56,17 +69,14 @@ public class LogicTests
     /// Проверяет использование составного bool выражения со скобками как условия if
     /// </summary>
     [Theory]
-    [InlineData(false, false, false, 0)]
-    [InlineData(false, false, true, 42)]
-    [InlineData(true, false, false, 0)]
-    [InlineData(true, true, false, 42)]
+    [MemberData(nameof(BooleanTriples))]
     public async Task UsesLogicExpressionInIfBlock(
         bool first,
         bool second,
-        bool third,
-        int expected)
+        bool third)
     {
         var program = await PlampE2ERunner.CompileFromCodeForTestsAsync(SourceFile);
+        var expected = (first && second) || third ? 42 : 0;
 
         var result = program.Invoke<int>("logic_in_if_block", first, second, third);
 

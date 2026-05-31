@@ -24,9 +24,9 @@ public static class Parser
 {
     public static RootNode ParseFile(ParsingContext context)
     {
-        //В парсере есть конвенция, что каждый метод парсинга должен возвращать seqence которая находится на следующем токене после него
-        //Но если парсинг только начался и первый токен пробел - это может вызывать проблемы, поэтому они пропускаются явно.
-        if (context.Sequence.Current() is WhiteSpace) context.Sequence.MoveNextNonWhiteSpace();
+        // В парсере есть конвенция: метод завершает работу на следующем значимом токене после разобранной конструкции.
+        // Для корня файла нужно отдельно пропустить начальные пробелы и комментарии, потому что до них конструкции еще нет
+        context.Sequence.SkipWhiteSpace();
         
         var topLevelList = new List<NodeBase>();
         while (context.Sequence.Current() is not EndOfFile)
@@ -1001,7 +1001,6 @@ public static class Parser
     {
         arrayDefinition = null;
 
-        context.Sequence.SkipWhiteSpace();
         if (context.Sequence.Current() is not OpenSquareBracket start)
             return false;
 

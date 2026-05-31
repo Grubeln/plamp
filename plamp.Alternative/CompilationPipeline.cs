@@ -9,7 +9,6 @@ using plamp.Abstractions.Symbols.SymTableBuilding;
 using plamp.Alternative.Parsing;
 using plamp.Alternative.SymbolsBuildingImpl;
 using plamp.Alternative.Tokenization;
-using plamp.Alternative.Tokenization.Token;
 using plamp.Alternative.Visitors.ModulePreCreation;
 using plamp.Alternative.Visitors.ModulePreCreation.BodyLevelExpression;
 using plamp.Alternative.Visitors.ModulePreCreation.FlowControlInsideLoop;
@@ -33,9 +32,6 @@ public static class CompilationPipeline
     {
         var tokenizationResult = await Tokenizer.TokenizeAsync(fileStream, fileName);
         var translationTable = new TranslationTable();
-        // Парсер должен работать только со значимыми токенами.
-        // Иначе редкие конструкции вроде комментариев между скобками generic типов начинают ломать синтаксический разбор
-        tokenizationResult.Sequence.SkipWhiteSpace();
         var parsingContext = new ParsingContext(tokenizationResult.Sequence, tokenizationResult.Exceptions, translationTable);
         var ast = Parser.ParseFile(parsingContext);
         return new ParsingResult(ast, parsingContext);

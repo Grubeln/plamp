@@ -62,7 +62,7 @@ public class ArrayInitParsingTests
     [Fact]
     public void ParseGenericArrayInitWithComments_Correct()
     {
-        const string code = "/*array*/[/*size*/2/*]*/]Box/*[*/[/*value*/int/*]*/]";
+        const string code = "[/*size*/2/*]*/]Box/*[*/[/*value*/int/*]*/]";
         var fixture = new Fixture() { Customizations = { new ParserContextCustomization(code) } };
         var context = fixture.Create<ParsingContext>();
         var result = Parser.TryParseArrayInitialization(context, out var arrayInit);

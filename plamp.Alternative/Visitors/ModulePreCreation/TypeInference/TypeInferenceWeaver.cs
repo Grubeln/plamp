@@ -260,20 +260,16 @@ public class TypeInferenceWeaver : BaseWeaver<PreCreationContext, TypeInferenceI
     {
         result = null;
         resultType = null;
-        if (node is not AddNode addition
-            || (leftType == null  && rightType == null)
-            || (leftType != null  && !CanConcatWithString(leftType))
-            || (rightType != null && !CanConcatWithString(rightType))
-            || (leftType != null && rightType != null && !SymbolSearchUtility.IsString(leftType) && !SymbolSearchUtility.IsString(rightType)))
+        if (node is not AddNode addition)
         {
             return false;
         }
+
+        var concatInfo = GetConcatInfo(leftType, rightType);
+        if (concatInfo == null) return false;
         
         result = VisitResult.Continue;
         resultType = Builtins.String;
-        var concatInfo = GetConcatInfo(leftType, rightType);
-        if (concatInfo == null) return false;
-
         var callName = new FuncCallNameNode(concatInfo.DefinitionName);
         
         if (!context.TranslationTable.TryGetSymbol(node, out var position))
@@ -294,12 +290,6 @@ public class TypeInferenceWeaver : BaseWeaver<PreCreationContext, TypeInferenceI
             
             var concatCall = new CallNode(null, callName, [addNode.Left, addNode.Right], []) { FnInfo = concatInfo };
             return concatCall;
-        }
-
-        // проверка можно ли конкатинировать тип со строкой
-        static bool CanConcatWithString(ITypeInfo type)
-        {
-            return SymbolSearchUtility.IsString(type) || type.Equals(Builtins.Char);
         }
 
         static IFnInfo? GetConcatInfo(ITypeInfo? left, ITypeInfo? right)

@@ -126,7 +126,7 @@ fn same_variable_name_in_disjoint_if_bodies(flag: bool) int {
     return 0;
 }
 
-fn same_variable_name_in_nested_body_after_inner_scope() int {
+fn same_variable_name_in_inner_body_preserves_outer_value() int {
     if (true) {
         value := 20;
         if (true) {

@@ -153,11 +153,11 @@ public class ControlFlowTests
     /// Проверяет, что переменная из внутреннего зоны видимости не мешает переменной внешней
     /// </summary>
     [Fact]
-    public async Task AllowsSameVariableNameAfterNestedBodyScope()
+    public async Task AllowsSameVariableNameInInnerBodyAndKeepsOuterValue()
     {
         var program = await PlampE2ERunner.CompileFromCodeForTestsAsync(SourceFile);
 
-        var result = program.Invoke<int>("same_variable_name_in_nested_body_after_inner_scope");
+        var result = program.Invoke<int>("same_variable_name_in_inner_body_preserves_outer_value");
 
         result.ShouldBe(42);
     }

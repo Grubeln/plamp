@@ -39,7 +39,7 @@ public class SyntaxTests
     public static TheoryData<string, string> StringSyntaxScenarios => new()
     {
         { "initializes_string_and_int_fields", "value" },
-        { "initializes_generic_pair_with_reordered_types", "value" }
+        { "initializes_generic_pair_and_returns_string_field", "value" }
     };
 
     /// <summary>

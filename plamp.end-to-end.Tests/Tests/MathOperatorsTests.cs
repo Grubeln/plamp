@@ -29,7 +29,7 @@ public class MathOperatorsTests
         { "increment_byte_variable", [(byte)41], 42 },
         { "add_short_values", [(short)20, (short)22], 42 },
         { "increment_short_field", [(short)41], 42 },
-        { "grouped_short_fields_and_assignment", [(short)20, (short)21], 42 },
+        { "grouped_small_number_fields_and_assignment", [(short)20, (short)21], 42 },
         { "add_uint_values", [20u, 22u], 42u },
         { "add_ulong_values", [20ul, 22ul], 42ul },
         { "increment_ushort_field", [(ushort)41], 42 },
