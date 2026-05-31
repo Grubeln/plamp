@@ -2,7 +2,6 @@ using System.Reflection;
 using System.Reflection.Emit;
 using plamp.Abstractions.Symbols;
 using plamp.Abstractions.Symbols.SymTableBuilding;
-using plamp.ILCodeEmitters.ModuleBuilding;
 
 namespace plamp.ILCodeEmitters;
 
@@ -12,21 +11,11 @@ namespace plamp.ILCodeEmitters;
 public static class SymTableEmitter
 {
     /// <summary>
-    /// Эмитит пользовательские типы и функции в модуль
-    /// </summary>
-    /// <param name="builder">Таблица символов с типами и функциями модуля</param>
-    /// <param name="moduleBuilder">Модуль, в который выполняется эмиссия</param>
-    public static void EmitModule(ISymTableBuilder builder, ModuleBuilder moduleBuilder)
-    {
-        EmitModule(builder, new ReflectionModuleBuilder(moduleBuilder));
-    }
-
-    /// <summary>
     /// Эмитит пользовательские типы и функции через переданный билдер
     /// </summary>
     /// <param name="builder">Таблица символов с типами и функциями модуля</param>
     /// <param name="moduleBuilder">Билдер, в который выполняется эмиссия</param>
-    public static void EmitModule(ISymTableBuilder builder, IPlampModuleBuilder moduleBuilder)
+    public static void EmitModule(ISymTableBuilder builder, ModuleBuilder moduleBuilder)
     {
         var types = TypeDependencyHelper.OrderTypes(builder.ListTypes());
         var builderParis = new List<TypeInfoBuilderPair>();
@@ -55,11 +44,6 @@ public static class SymTableEmitter
     }
 
     public static TypeBuilder EmitType(ModuleBuilder module, ITypeBuilderInfo type)
-    {
-        return EmitType(new ReflectionModuleBuilder(module), type);
-    }
-
-    public static TypeBuilder EmitType(IPlampModuleBuilder module, ITypeBuilderInfo type)
     {
         var typeBuilder = module.DefineType(
             type.DefinitionName, 
@@ -147,22 +131,11 @@ public static class SymTableEmitter
     /// <summary>
     /// Эмитит одну глобальную функцию в модуль
     /// </summary>
-    /// <param name="module">Модуль, в который добавляется функция</param>
-    /// <param name="symTableBuilder">Таблица символов, связанная с AST текущего модуля</param>
-    /// <param name="func">Описание функции из таблицы символов</param>
-    public static void EmitFunction(ModuleBuilder module, ISymTableBuilder symTableBuilder, IFnBuilderInfo func)
-    {
-        EmitFunction(new ReflectionModuleBuilder(module), symTableBuilder, func);
-    }
-
-    /// <summary>
-    /// Эмитит одну глобальную функцию в модуль
-    /// </summary>
     /// <param name="module">Билдер, в который добавляется функция</param>
     /// <param name="symTableBuilder">Таблица символов, связанная с AST текущего модуля</param>
     /// <param name="func">Описание функции из таблицы символов</param>
     public static void EmitFunction(
-        IPlampModuleBuilder module,
+        ModuleBuilder module,
         ISymTableBuilder symTableBuilder,
         IFnBuilderInfo func)
     {
@@ -196,8 +169,7 @@ public static class SymTableEmitter
             throw new InvalidOperationException("Не найдено объявление функции в исходном ast, ошибка в коде компилятора.");
         }
         
-        var bodyEmissionBuilder = module.CreateBodyEmissionBuilder(methodBuilder);
-        IlCodeEmitter.EmitMethodBody(node.Body, bodyEmissionBuilder, parameters);
+        IlCodeEmitter.EmitMethodBody(node.Body, methodBuilder, parameters);
     }
 
     private static void SetGenericsForFunc(MethodBuilder methodBuilder, IReadOnlyList<IGenericParameterBuilder> genericParams)

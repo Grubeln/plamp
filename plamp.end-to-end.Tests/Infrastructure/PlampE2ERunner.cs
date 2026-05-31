@@ -4,7 +4,7 @@ using System.Text;
 using plamp.Abstractions.Ast;
 using plamp.Alternative;
 using plamp.ILCodeEmitters;
-using plamp.ILCodeEmitters.ModuleBuilding;
+using plamp.ILCodeEmitters.EmissionDebug;
 
 namespace plamp.EndToEnd.Tests.Infrastructure;
 
@@ -57,7 +57,7 @@ public static class PlampE2ERunner
         var assemblyName = new AssemblyName(Guid.NewGuid().ToString("N"));
         var assembly = AssemblyBuilder.DefineDynamicAssembly(assemblyName, AssemblyBuilderAccess.RunAndCollect);
         var module = assembly.DefineDynamicModule(assemblyName.Name!);
-        var moduleBuilder = new IlDumpModuleBuilder(new ReflectionModuleBuilder(module));
+        var moduleBuilder = new IlDumpModuleBuilder(module);
 
         SymTableEmitter.EmitModule(symTable, moduleBuilder);
         moduleBuilder.CreateGlobalFunctions();
